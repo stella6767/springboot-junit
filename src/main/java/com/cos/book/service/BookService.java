@@ -30,10 +30,12 @@ public class BookService {
 		return bookRepository.findById(id) //함수형으로 변환
 				.orElseThrow(()->new IllegalArgumentException("id를 확인해주세요!"));
 	}
+	
 	@Transactional(readOnly = true)
-	public List<Book> 모두가져오기(Book book) {
+	public List<Book> 모두가져오기() {
 		return bookRepository.findAll();
 	}
+	
 	@Transactional
 	public Book 수정하기(Long id, Book book) {
 		//더티체킹 update치기
@@ -46,7 +48,7 @@ public class BookService {
 	}//함수 종료=>트랜잭션 종료 => 영속화 되어있는 데이터를 DB로 갱신(flush) => commit ===========>더티체킹
 	
 	@Transactional
-	public String 저장하기(Long id) {
+	public String 삭제하기(Long id) {
 		bookRepository.deleteById(id);//오류가 터지면 익셉션을 타니까...신경쓰지 말고
 		
 		return "ok";
