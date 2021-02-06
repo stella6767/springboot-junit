@@ -1,8 +1,11 @@
 package com.cos.book.web;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,6 +15,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,12 +57,28 @@ public class BookControllerItegreTest {
 	@Autowired
 	private EntityManager entityManager;
 	
-	@BeforeEach
+	@BeforeEach //각각의 단위 테스트 전에 초기화할 함수를 적어준다. 
 	public void init() {
 		//entityManager.persist(new Book());
-		entityManager.createNativeQuery("ALTER TABLE book ALTER COLUMN id RESTART WITH 1").executeUpdate();//매 시작마다 increment 값을 초기화시켜준다.
-		//DB마다 쿼리 문법이 다르므로 주의!
+		entityManager.createNativeQuery("ALTER TABLE book ALTER COLUMN id RESTART WITH 1").executeUpdate();
+		//@Transactional 으로 DB의 increment 값까지 초기화가 안 되므로, null로 집어넣을 시 내가 예상한 id값과 다를 수 있음. 그래서 따로 초기화
+		//매 시작마다 increment 값을 초기화시켜준다. DB마다 쿼리 문법이 다르므로 주의!    
+		
+//테스트 시마다 값을 집어넣는 게 귀찮으면 여기서 각각의 테스트가 실행되면서 자동으로 집어넣게끔 설정해주고 
+//@AfterEach 로 테스트가 끝나면 삭제해주면 된다. 대신 테스트 로직이 꼬일 수 있으므로 난 안씀
+//		List<Book> books = new ArrayList<>();       
+//		books.add(new Book(null,"스프링부트 따라하기","코스"));
+//		books.add(new Book(null,"리액트 따라하기","코스"));			
+//		books.add(new Book(null,"JUnit 따라하기","코스"));			
+//		bookRepository.saveAll(books);		
 	}
+	
+	
+	@AfterEach 
+	public void end() {
+		//bookRepository.deleteAll();
+	}
+	
 	
 	
 	
@@ -114,18 +135,73 @@ public class BookControllerItegreTest {
 		public void findById_테스트() throws Exception {
 			// given
 			Long id = 1L;
+			
+			List<Book> books = new ArrayList<>();
+			books.add(new Book(null,"스프링부트 따라하기","코스"));
+			books.add(new Book(null,"리액트 따라하기","코스"));			
+			books.add(new Book(null,"JUnit 따라하기","코스"));			
+			bookRepository.saveAll(books);
 
 			// when
 			ResultActions resultAction = mockMvc.perform(get("/book/{id}", id).accept(MediaType.APPLICATION_JSON_UTF8));
 
 			// then
-			resultAction.andExpect(status().isOk()).andExpect(jsonPath("$.title").value("자바 공부하기"))
+			resultAction.andExpect(status().isOk()).andExpect(jsonPath("$.title").value("스프링부트 따라하기"))
+					.andDo(MockMvcResultHandlers.print());
+		}
+		
+		
+		
+		@Test
+		public void update_테스트() throws Exception {
+			// given(테스트를 하기 위한 준비)
+
+			Long id = 3L;
+			List<Book> books = new ArrayList<>();
+			books.add(new Book(null,"스프링부트 따라하기","코스"));
+			books.add(new Book(null,"리액트 따라하기","코스"));			
+			books.add(new Book(null,"JUnit 따라하기","코스"));			
+			bookRepository.saveAll(books);
+
+			Book book = new Book(null, "c++ 따라하기", "코스");
+			String content = new ObjectMapper().writeValueAsString(book); // json으로 변환시켜줌
+
+
+			// when
+			ResultActions resultAction = mockMvc.perform(put("/book/{id}", id)
+					.contentType(MediaType.APPLICATION_JSON_UTF8)
+					.content(content) //내가 업데이트할 데이터  
+					.accept(MediaType.APPLICATION_JSON_UTF8));
+
+			// then
+			resultAction.andExpect(status().isOk())
+			.andExpect(jsonPath("$.title").value("c++ 따라하기"))
+			.andExpect(jsonPath("$.id").value(3L))			
+					.andDo(MockMvcResultHandlers.print());
+		}
+		
+
+		
+		@Test
+		public void delete_테스트() throws Exception {
+			// given(테스트를 하기 위한 준비)
+			Long id = 1L;
+			List<Book> books = new ArrayList<>();
+			books.add(new Book(null,"스프링부트 따라하기","코스"));	
+			bookRepository.saveAll(books);
+
+			// when
+			ResultActions resultAction = mockMvc.perform(delete("/book/{id}", id));
+
+			// then
+			resultAction.andExpect(status().isOk())
 					.andDo(MockMvcResultHandlers.print());
 
+			MvcResult requestResult = resultAction.andReturn();
+			String result = requestResult.getResponse().getContentAsString();
+			
+			assertEquals("ok", result);
 		}
-
-		
-		
 		
 		
 		
