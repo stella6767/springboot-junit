@@ -44,10 +44,7 @@ public class BookServiceUnitTest {
 		Book bookEntity = bookService.저장하기(book);
 		
 		//then
-		assertEquals(bookEntity, book);
-		
-		
-		
+		assertEquals(bookEntity, book);		
 	}
 	
 	

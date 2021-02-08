@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,7 +25,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.cos.book.domain.Book;
 import com.cos.book.service.BookService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -57,13 +55,16 @@ public class BookControllerUnitTest {
 		// 컨트롤러 관련로직만 테스트하기 때문에 실제 DB와 아무 상관이 없이 그냥 로직만 테스트
 
 		// when(테스트 실행)
-		ResultActions resultAction = mockMvc.perform(post("/book").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(content).accept(MediaType.APPLICATION_JSON_UTF8));
+		ResultActions resultAction = mockMvc.perform(post("/book")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(content)
+				.accept(MediaType.APPLICATION_JSON_UTF8));
 
 		// then(검증)
-		resultAction.andExpect(status().isCreated()).andExpect(jsonPath("$.title").value("스프링 따라하기"))// 나는 이 결과를 기대한다.
-																										// 만약 틀리면 에러
-				.andDo(MockMvcResultHandlers.print());
+		resultAction.andExpect(status().isCreated())
+		.andExpect(jsonPath("$.title")
+				.value("스프링 따라하기"))// 나는 이 결과를 기대한다.만약 틀리면 에런 																										
+		.andDo(MockMvcResultHandlers.print());
 	}
 
 	@Test
@@ -78,8 +79,10 @@ public class BookControllerUnitTest {
 		ResultActions resultAction = mockMvc.perform(get("/book").accept(MediaType.APPLICATION_JSON_UTF8));
 
 		// then
-		resultAction.andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(2)))
-				.andExpect(jsonPath("$.[0].title").value("스프링부트 따라하기")).andDo(MockMvcResultHandlers.print());
+		resultAction.andExpect(status().isOk())
+		.andExpect(jsonPath("$", Matchers.hasSize(2)))
+				.andExpect(jsonPath("$.[0].title").value("스프링부트 따라하기"))
+				.andDo(MockMvcResultHandlers.print());
 	}
 
 	@Test

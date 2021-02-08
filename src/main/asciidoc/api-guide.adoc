@@ -1,0 +1,63 @@
+= REST Service API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+= Resources
+
+== book REST Service
+
+The book provides the entry point into the service.
+
+=== Accessing the book GET with provided content
+
+==== Request structure
+
+== 사용자 리스트 조회 [get]
+
+사용자리스트 조회
+
+
+include::{snippets}/book-controller-itegre-test/find-all_테스트/curl-request.adoc[]
+
+=== 요청 구조
+
+include::{snippets}/book-controller-itegre-test/find-all_테스트/http-request.adoc[]
+
+==== 요청 파라미터들
+
+include::{snippets}/book-controller-itegre-test/find-all_테스트/request-parameters.adoc[]
+
+=== 응답 구조
+
+include::{snippets}/book-controller-itegre-test/find-all_테스트/http-response.adoc[]
+
+==== 응답 파라미터들
+
+include::{snippets}/book-controller-itegre-test/find-all_테스트/response-fields.adoc[]
+
+== 사용자 조회 [get]
+
+사용자 조회
+
+
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/curl-request.adoc[]
+
+=== 요청 구조
+
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/http-request.adoc[]
+
+==== 요청 파라미터들
+
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/path-parameters.adoc[]
+
+=== 응답 구조
+
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/http-response.adoc[]
+
+==== 응답 파라미터들
+
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/response-fields.adoc[]

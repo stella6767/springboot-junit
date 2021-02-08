@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.annotation.RequestScope;
 
 import com.cos.book.domain.Book;
 import com.cos.book.service.BookService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor //생성자를 주입받는 방법 중 lombok 라이브러리 사용방법(DI)
 @RestController
 public class BookController {
 	
@@ -26,7 +25,6 @@ public class BookController {
 	public ResponseEntity<?>save(@RequestBody Book book){
 		return new ResponseEntity<>(bookService.저장하기(book),HttpStatus.CREATED);//200
 	}
-	
 	
 	@GetMapping("/book")
 	public ResponseEntity<?> findAll(){			
@@ -47,15 +45,5 @@ public class BookController {
 	public ResponseEntity<?>deleteById(@PathVariable Long id){
 		return new ResponseEntity<>(bookService.삭제하기(id),HttpStatus.OK);//200
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

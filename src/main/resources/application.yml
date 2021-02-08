@@ -3,8 +3,6 @@ server:
     encoding:
       charset: utf-8
       enabled: true 
-
-
 spring:
   datasource:
     url: jdbc:h2:mem:cosdb
