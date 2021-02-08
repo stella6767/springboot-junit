@@ -27,17 +27,17 @@ include::{snippets}/book-controller-itegre-test/find-all_테스트/curl-request.
 
 include::{snippets}/book-controller-itegre-test/find-all_테스트/http-request.adoc[]
 
-==== 요청 파라미터들
-
-include::{snippets}/book-controller-itegre-test/find-all_테스트/request-parameters.adoc[]
-
-=== 응답 구조
+==== 응답 구조
 
 include::{snippets}/book-controller-itegre-test/find-all_테스트/http-response.adoc[]
 
-==== 응답 파라미터들
+=== 요청 바디
 
-include::{snippets}/book-controller-itegre-test/find-all_테스트/response-fields.adoc[]
+include::{snippets}/book-controller-itegre-test/find-all_테스트/request-body.adoc[]
+
+==== 응답 바디
+
+include::{snippets}/book-controller-itegre-test/find-all_테스트/response-body.adoc[]
 
 == 사용자 조회 [get]
 
@@ -50,14 +50,14 @@ include::{snippets}/book-controller-itegre-test/find-by-id_테스트/curl-reques
 
 include::{snippets}/book-controller-itegre-test/find-by-id_테스트/http-request.adoc[]
 
-==== 요청 파라미터들
-
-include::{snippets}/book-controller-itegre-test/find-by-id_테스트/path-parameters.adoc[]
-
-=== 응답 구조
+==== 응답 구조
 
 include::{snippets}/book-controller-itegre-test/find-by-id_테스트/http-response.adoc[]
 
-==== 응답 파라미터들
+=== 요청 바디
 
-include::{snippets}/book-controller-itegre-test/find-by-id_테스트/response-fields.adoc[]
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/request-body.adoc[]
+
+==== 응답 바디
+
+include::{snippets}/book-controller-itegre-test/find-by-id_테스트/response-body.adoc[]
