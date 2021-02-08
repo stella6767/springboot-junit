@@ -9,14 +9,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+
+
 
 
 import java.nio.charset.StandardCharsets;
@@ -40,6 +36,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.request.RequestParametersSnippet;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -48,7 +45,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 
 import com.cos.book.domain.Book;
 import com.cos.book.domain.BookRepository;
@@ -116,8 +112,11 @@ public class BookControllerItegreTest {
 				.content(content).accept(MediaType.APPLICATION_JSON_UTF8));
 
 		// then(검증)
-		resultAction.andExpect(status().isCreated()).andExpect(jsonPath("$.title").value("스프링 따라하기"))
-				.andDo(MockMvcResultHandlers.print()).andDo(document);
+		resultAction.andExpect(status().isCreated())
+		.andExpect(jsonPath("$.title")
+				.value("스프링 따라하기"))
+				.andDo(MockMvcResultHandlers.print())
+				.andDo(document);
 
 	}
 
@@ -135,8 +134,7 @@ public class BookControllerItegreTest {
 
 		// then
 		resultAction.andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(3)))
-				.andExpect(jsonPath("$.[0].title").value("스프링부트 따라하기")).andDo(MockMvcResultHandlers.print())
-				.andDo(document);
+				.andExpect(jsonPath("$.[0].title").value("스프링부트 따라하기")).andDo(MockMvcResultHandlers.print());
 	}
 
 	@Test
@@ -155,8 +153,7 @@ public class BookControllerItegreTest {
 
 		// then
 		resultAction.andExpect(status().isOk()).andExpect(jsonPath("$.title").value("스프링부트 따라하기"))
-				.andDo(MockMvcResultHandlers.print())
-				.andDo(document);
+				.andDo(MockMvcResultHandlers.print());
 
 	}
 
@@ -182,8 +179,21 @@ public class BookControllerItegreTest {
 
 		// then
 		resultAction.andExpect(status().isOk()).andExpect(jsonPath("$.title").value("c++ 따라하기"))
-				.andExpect(jsonPath("$.id").value(3L)).andDo(MockMvcResultHandlers.print()).andDo(document);
-
+				.andExpect(jsonPath("$.id").value(3L)).andDo(MockMvcResultHandlers.print())
+				.andDo(document.document(
+						//pathParameters(parameterWithName("id").description("id")),
+						
+						requestFields(fieldWithPath("id").description("번호"),
+							       fieldWithPath("title").description("제목"),
+		                           fieldWithPath("author").description("저자")   							
+								),
+						
+                      responseFields(
+                              fieldWithPath("id").description("번호"),
+                              fieldWithPath("title").description("제목"),
+                              fieldWithPath("author").description("저자")                                                                       
+                      )
+              ));
 	}
 
 	@Test
