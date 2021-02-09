@@ -34,6 +34,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.request.RequestParametersSnippet;
@@ -173,7 +174,7 @@ public class BookControllerItegreTest {
 
 		// when
 		ResultActions resultAction = mockMvc
-				.perform(put("/book/{id}", id).contentType(MediaType.APPLICATION_JSON_UTF8).content(content) // 내가 업데이트할
+				.perform(RestDocumentationRequestBuilders.put("/book/{id}", id).contentType(MediaType.APPLICATION_JSON_UTF8).content(content) // 내가 업데이트할
 																												// 데이터
 						.accept(MediaType.APPLICATION_JSON_UTF8));
 
@@ -181,7 +182,7 @@ public class BookControllerItegreTest {
 		resultAction.andExpect(status().isOk()).andExpect(jsonPath("$.title").value("c++ 따라하기"))
 				.andExpect(jsonPath("$.id").value(3L)).andDo(MockMvcResultHandlers.print())
 				.andDo(document.document(
-						//pathParameters(parameterWithName("id").description("id")),
+						pathParameters(parameterWithName("id").description("id")),
 						
 						requestFields(fieldWithPath("id").description("번호"),
 							       fieldWithPath("title").description("제목"),
